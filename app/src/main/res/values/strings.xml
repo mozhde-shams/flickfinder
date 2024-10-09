@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">FlickFinder</string>
+    <string name="something_went_wrong">Seems like something went wrong.</string>
+    <string name="try_again">Try again</string>
 </resources>
