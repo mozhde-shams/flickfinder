@@ -21,5 +21,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "FlickFinder"
 include(":app")
-include(":core")
 include(":core:network")
+include(":features:home")
