@@ -61,6 +61,11 @@ class HomeViewModel @Inject constructor(
         events
             .filterIsInstance<HomeEvent.ErrorScreenTryAgainClicked>()
             .onEach {
+                mutableState.update {
+                    it.copy(
+                        status = HomeState.Status.Loading
+                    )
+                }
                fetchMovies()
             }
             .launchIn(viewModelScope)

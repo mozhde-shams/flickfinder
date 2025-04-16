@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import mozhde.shams.features.home.domain.Movie
+import coil3.compose.AsyncImage
 
 @Composable
 internal fun HomeScreen(
@@ -82,6 +83,11 @@ private fun MovieItem(
             verticalArrangement = Arrangement.Center,
             modifier = modifier.background(Color.White),
         ) {
+            AsyncImage(
+                model = movie.posterPath,
+                contentDescription = null,
+                modifier = Modifier.padding(8.dp),
+            )
             Text(
                 text = movie.title ?: "",
                 color = Color.Red,
