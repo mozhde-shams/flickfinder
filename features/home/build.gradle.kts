@@ -8,7 +8,7 @@ plugins {
 
 android {
     namespace = "mozhde.shams.features.home"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 24
@@ -50,6 +50,8 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
+    implementation(libs.coil)
+    implementation(libs.coil.network.okhttp)
     kapt(libs.hilt.compiler)
     //test
     testImplementation(libs.junit)
