@@ -52,6 +52,8 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.coil)
     implementation(libs.coil.network.okhttp)
+    implementation(libs.paging.runtime)
+    implementation(libs.paging.compose)
     kapt(libs.hilt.compiler)
     //test
     testImplementation(libs.junit)

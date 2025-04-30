@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -12,14 +13,20 @@ import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.paging.LoadState
+import androidx.paging.PagingData
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import mozhde.shams.features.home.domain.Movie
 import coil3.compose.AsyncImage
+import kotlinx.coroutines.flow.Flow
 
 @Composable
 internal fun HomeScreen(
@@ -29,38 +36,98 @@ internal fun HomeScreen(
     when (state.status) {
         is HomeState.Status.Loading -> LoadingScreen()
         is HomeState.Status.Error -> ErrorScreen(dispatch)
-        is HomeState.Status.Movies -> MoviesScreen(state)
+        is HomeState.Status.Movies -> MoviesScreen(
+            movies = state.movies,
+            dispatch = dispatch,
+            needToRefresh = state.needsRetry,
+        )
     }
 }
 
 @Composable
 private fun LoadingScreen() {
     Column(
+        modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxSize()
     ) {
         CircularProgressIndicator(
-            modifier = Modifier.size(50.dp)
+            modifier = Modifier.size(64.dp),
+            color = MaterialTheme.colorScheme.primary,
+            strokeWidth = 4.dp,
+        )
+    }
+}
+
+@Composable
+private fun LoadingItem(
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        CircularProgressIndicator(
+            modifier = Modifier.size(64.dp),
+            color = MaterialTheme.colorScheme.primary,
+            strokeWidth = 4.dp,
         )
     }
 }
 
 @Composable
 private fun MoviesScreen(
-    state: HomeState
+    movies: Flow<PagingData<Movie>>,
+    dispatch: (HomeEvent) -> Unit,
+    needToRefresh: Boolean,
 ) {
-    LazyVerticalStaggeredGrid(
-        columns = StaggeredGridCells.Fixed(2),
-        verticalItemSpacing = 8.dp,
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(all = 4.dp),
-    ) {
-        items(state.movies.size) { index ->
-            MovieItem(
-                movie = state.movies[index],
-            )
+    val lazyPagingItems: LazyPagingItems<Movie> = movies.collectAsLazyPagingItems()
+
+    if (needToRefresh) {
+        lazyPagingItems.retry()
+    }
+
+    when {
+        lazyPagingItems.loadState.refresh is LoadState.Loading && lazyPagingItems.itemCount == 0 ->
+            LoadingScreen()
+
+        lazyPagingItems.loadState.refresh is LoadState.Error && lazyPagingItems.itemCount == 0 ->
+            ErrorScreen(dispatch)
+
+        else -> {
+            LazyVerticalStaggeredGrid(
+                columns = StaggeredGridCells.Fixed(2),
+                verticalItemSpacing = 8.dp,
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(all = 4.dp),
+            ) {
+                items(lazyPagingItems.itemCount) { index ->
+                    lazyPagingItems[index]?.let { movie ->
+                        MovieItem(movie)
+                    }
+                }
+                lazyPagingItems.apply {
+                    when {
+                        loadState.refresh is LoadState.Loading -> {
+                            item { LoadingItem() }
+                        }
+
+                        loadState.append is LoadState.Loading -> {
+                            item { LoadingItem() }
+                        }
+
+                        loadState.refresh is LoadState.Error -> {
+                            item { ErrorItem(dispatch) }
+                        }
+
+                        loadState.append is LoadState.Error -> {
+                            item { ErrorItem(dispatch) }
+                        }
+                    }
+                }
+            }
         }
     }
 }
