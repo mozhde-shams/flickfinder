@@ -42,7 +42,6 @@ object NetworkModule {
     @Provides
     internal fun provideRetrofitBuilder(
         @Named("baseUrl") baseUrl: String,
-        resultCallAdapterFactory: ResultCallAdapterFactory,
         httpClient: OkHttpClient,
     ): Retrofit {
         val contentType = "application/json".toMediaType()
@@ -50,9 +49,7 @@ object NetworkModule {
             .Builder()
             .baseUrl(baseUrl)
             .addConverterFactory(Json.asConverterFactory(contentType))
-            .addCallAdapterFactory(resultCallAdapterFactory)
             .client(httpClient)
             .build()
     }
-
 }

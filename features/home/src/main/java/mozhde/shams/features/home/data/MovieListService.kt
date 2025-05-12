@@ -8,8 +8,8 @@ interface MovieListService {
 
     @GET("movie/{movieType}")
     suspend fun getMovieList(
-        @Path("movieType") movieTye: String,
+        @Path("movieType") movieType: String = "now_playing",
         @Query("api_key") apiKey: String = "YOUR_API_KEY",
         @Query("page") page: Int,
-    ): Result<JsonMovieList>
+    ): JsonMovieList
 }
