@@ -1,4 +1,4 @@
-package mozhde.shams.flickfinder
+package mozhde.shams.features.home
 
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
