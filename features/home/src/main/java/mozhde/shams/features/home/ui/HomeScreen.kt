@@ -19,6 +19,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.PagingData
@@ -27,6 +30,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import mozhde.shams.features.home.domain.Movie
 import coil3.compose.AsyncImage
 import kotlinx.coroutines.flow.Flow
+import mozhde.shams.features.home.R
 
 @Composable
 internal fun HomeScreen(
@@ -46,13 +50,18 @@ internal fun HomeScreen(
 
 @Composable
 private fun LoadingScreen() {
+    val loadingString = stringResource(id = R.string.loading)
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         CircularProgressIndicator(
-            modifier = Modifier.size(64.dp),
+            modifier = Modifier
+                .size(64.dp)
+                .semantics {
+                    contentDescription = loadingString
+                },
             color = MaterialTheme.colorScheme.primary,
             strokeWidth = 4.dp,
         )

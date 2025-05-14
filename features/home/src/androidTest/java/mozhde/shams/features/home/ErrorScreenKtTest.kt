@@ -21,9 +21,10 @@ class ErrorScreenKtTest {
 
     @Test
     fun errorScreen_displaysErrorMessageAndRetryButton() {
-        var retryClicked = false
-        val dispatch: (HomeEvent) -> Unit = {
-            retryClicked = true
+        var tryAgainClicked = false
+        val dispatch: (HomeEvent) -> Unit = { event ->
+            if (event is HomeEvent.ErrorScreenTryAgainClicked)
+                tryAgainClicked = true
         }
         composeTestRule.setContent {
             ErrorScreen(
@@ -45,7 +46,7 @@ class ErrorScreenKtTest {
             .onNodeWithText("Try again")
             .performClick()
 
-        assert(retryClicked)
+        assert(tryAgainClicked)
     }
 
     @Test
