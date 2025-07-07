@@ -1,3 +1,6 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.jetbrainsKotlinAndroid)
@@ -15,6 +18,20 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
+        buildFeatures {
+            buildConfig = true
+        }
+        val apiKey = if (System.getenv("API_KEY") != null) {
+            System.getenv("API_KEY")
+        } else {
+            val props = Properties()
+            val localProperties = rootProject.file("local.properties")
+            if (localProperties.exists()) {
+                props.load(FileInputStream(localProperties))
+                props.getProperty("API_KEY")
+            } else null
+        } ?: ""
+        buildConfigField("String", "API_KEY", "\"$apiKey\"")
     }
 
     buildTypes {
