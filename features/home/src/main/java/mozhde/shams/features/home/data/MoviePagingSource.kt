@@ -2,7 +2,6 @@ package mozhde.shams.features.home.data
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import mozhde.shams.features.home.BuildConfig
 import mozhde.shams.features.home.domain.Movie
 import javax.inject.Inject
 
@@ -21,7 +20,6 @@ class MoviePagingSource @Inject constructor(
         return try {
             val movieList = movieListService.getMovieList(
                 page = position,
-                apiKey = BuildConfig.API_KEY,
             )
 
             val movies = movieList.toDomain().movies
