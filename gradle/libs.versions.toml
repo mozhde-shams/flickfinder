@@ -24,6 +24,8 @@ material = "1.12.0"
 serialization = "1.8.10"
 coil = "3.1.0"
 paging = "3.3.6"
+kotlinCoroutineTest = "1.10.2"
+mockk = "1.13.5"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -56,6 +58,8 @@ coil = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil"
 coil-network-okhttp = { group = "io.coil-kt.coil3", name = "coil-network-okhttp", version.ref = "coil" }
 paging-runtime = { group = "androidx.paging", name = "paging-runtime", version.ref = "paging" }
 paging-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "paging" }
+kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinCoroutineTest"}
+mockk = {group = "io.mockk", name = "mockk", version.ref = "mockk"}
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
